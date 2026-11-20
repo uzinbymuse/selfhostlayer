@@ -30,6 +30,10 @@ install_release() {
   rm -rf "${tmp:?}"
   chown -R root:root "$RELEASES_DIR/$version"
   chmod -R go-w "$RELEASES_DIR/$version"
+  # The unprivileged `layer` user must be able to traverse and read the
+  # release (panel WorkingDirectory). Tarball modes depend on the builder's
+  # umask, so normalise them here instead of trusting the archive.
+  chmod -R a+rX "$RELEASES_DIR/$version"
   chmod 755 "$RELEASES_DIR/$version/agent/layer.mjs"
 
   ln -sfn "releases/$version" /opt/layer/current

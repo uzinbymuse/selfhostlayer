@@ -30,6 +30,83 @@ curl -fsSL https://get.selfhostlayer.com | bash
   <img src=".github/assets/hero-overview.png" alt="A project's overview in the Self Host Layer panel: status, runtime, memory, sandbox score, the live site and CPU and memory charts" width="100%">
 </p>
 
+## 🇲🇲 မြန်မာလို အကျဉ်းချုပ်
+
+**Self Host Layer ဆိုတာ ကိုယ်ပိုင် Vercel ပါ** — ကိုယ့်ရဲ့ $5 VPS ပေါ်မှာ run တဲ့
+self-hosted platform တစ်ခု။ Docker မလိုပါဘူး။ GitHub ကို push လုပ်လိုက်တာနဲ့
+app က HTTPS နဲ့ live ဖြစ်သွားတယ်။ Domain, database, backup, alert တွေကို
+ကိုယ့် server ပေါ်က web panel ကနေ စီမံလို့ရတယ်။
+
+### ဘာလို့ သုံးတာလဲ
+
+- **Transfer limit မရှိဘူး။** Vercel free plan ရဲ့ 10 GB Fast Origin Transfer
+  limit လို ကန့်သတ်ချက် မရှိဘူး — ကိုယ့် server, ကိုယ့် bandwidth။
+- **Push လုပ်ရင် deploy အလိုအလျောက် ဖြစ်တယ်။** Blue/green deploy နဲ့
+  downtime မရှိဘူး၊ တစ်ချက်နှိပ်ရုံနဲ့ အရင် version ကို rollback လုပ်လို့ရတယ်။
+- **ဘာမှ ဖုံးကွယ်မထားဘူး။** App တိုင်းက သာမန် folder တစ်ခု၊ Linux user တစ်ယောက်၊
+  systemd unit တစ်ခု၊ Caddy site တစ်ခု — panel ကို ဖြုတ်လိုက်ရင်တောင်
+  app တွေက ဆက်ပြီး run နေမယ်။
+- **ဘေးကင်းအောင် လုပ်ထားတယ်။** App တိုင်းက သူ့ user သူ့ memory limit နဲ့
+  sandboxed ဖြစ်ပြီး run တယ်၊ တစ်ခုက နောက်တစ်ခုကို ဖတ်လို့မရဘူး၊ နှေးအောင်လည်း
+  လုပ်လို့မရဘူး။
+
+### လိုအပ်ချက်
+
+Ubuntu 24.04 / 26.04 ဒါမှမဟုတ် Debian 12 server အသစ် တစ်လုံး၊ RAM 1 GB
+အနည်းဆုံး၊ disk အလွတ် 10 GB၊ port 80 နဲ့ 443 ပွင့်နေရမယ်။
+
+### အမြန်စတင်နည်း
+
+**၁။ Install လုပ်ပါ။** Server ထဲကို root နဲ့ SSH ၀င်ပြီး:
+
+```sh
+curl -fsSL https://get.selfhostlayer.com | bash
+```
+
+မိနစ်အနည်းငယ်ကြာပြီး panel လိပ်စာနဲ့ တစ်ခါသုံး setup token (24 နာရီ သက်တမ်း)
+ပြပေးလိမ့်မယ်။
+
+**၂။ အကောင့် ဖွင့်ပါ။** လိပ်စာကို ဖွင့်ပြီး token ကို ထည့်၊ email နဲ့ password
+ရွေးပြီး two-factor sign-in ဖွင့်ပါ။ လိပ်စာမှာ Let's Encrypt certificate
+အဆင်သင့် ပါပြီးသား။
+
+**၃။ GitHub ချိတ်ပါ။** **New project → Connect GitHub** ကို နှိပ်ပါ။ Panel က
+ကိုယ်ပိုင် GitHub App တစ်ခု ဆောက်ပေးပြီး ဘယ် repo တွေကို မြင်နိုင်မလဲ ကိုယ်တိုင်
+ရွေးလို့ရတယ်။
+
+**၄။ Repo ကို import လုပ်ပါ။** Repo ကို ရွေးလိုက်တာနဲ့ framework, package
+manager, build နဲ့ start command တွေကို အလိုအလျောက် သိပေးတယ်။ Environment
+variable တွေ ထည့်ပြီး **Deploy** နှိပ်ပါ — တစ်မိနစ်အတွင်း
+`https://<app>.<ip>.sslip.io` မှာ live ဖြစ်သွားတယ်။
+
+**၅။ ကိုယ့် domain ထည့်ပါ** (မဖြစ်မနေ မဟုတ်)။ Project ရဲ့ **Domains** မှာ
+`example.com` ကို ထည့်ပါ။ DNS မှန်ကြောင်း စစ်ပြီး HTTPS နဲ့ ပြောင်းပေးတယ်။
+
+အဲဒီနောက်ပိုင်း branch ကို push လုပ်တိုင်း အလိုအလျောက် deploy ဖြစ်သွားမယ်။
+
+> Installer ကို ထပ်ပြီး run လို့ရတယ် — စစ်ဆေးပြီး ပြင်ပေးတယ်၊ setting တွေ
+> မပျက်ဘူး။ အသေးစိတ်: [docs/install.md](docs/install.md)။
+
+### ပါဝင်တဲ့ အရာတွေ
+
+- **Push to deploy** — Next.js, Vite, Nuxt, Astro, Remix, Express နဲ့ static site တွေ
+- **Domain နဲ့ HTTPS** — ကိုယ့် domain, certificate အလိုအလျောက် သက်တမ်းတိုး
+- **Database** — Postgres, MySQL (MariaDB), MongoDB, Redis, SQLite (Docker မလို)
+- **Backup** — စာဝှက်ထားပြီး S3/R2/B2 ကို တင်တယ်၊ တစ်ချက်နှိပ်ရုံနဲ့ ပြန်ယူလို့ရတယ်
+- **Alert** — deploy fail ရင်၊ app crash-loop ဖြစ်ရင်၊ disk/certificate ပြဿနာရှိရင် Telegram/Discord/webhook/email ပို့တယ်
+- **Cron job, background worker, WordPress/Ghost** — တစ်ချက်နှိပ်ရုံနဲ့ ရတယ်
+- **`layer` command** — `layer ps`, `layer logs myapp -f`, `layer update`, `layer repair`
+
+အသေးစိတ် အင်္ဂလိပ် docs: [docs/](docs/) (ဒါမှမဟုတ် [selfhostlayer.com/docs](https://selfhostlayer.com/docs))။
+
+### ဒီ fork အကြောင်း
+
+ဒါက [upstream](https://github.com/mddanishyusuf/selfhostlayer) ရဲ့ fork ဖြစ်ပြီး
+ကိုယ့် VPS ပေါ်မှာ စမ်းသုံးဖို့ သိမ်းထားတာပါ။ Upstream နဲ့ ကွာခြားချက် တစ်ခုပဲ ရှိတယ်:
+`installer/lib/release.sh` မှာ release folder တွေကို `chmod -R a+rX` လုပ်ပေးထားတယ်
+— မဟုတ်ရင် panel က WorkingDirectory ထဲ ၀င်လို့ မရဘဲ စတင်မှာ fail တယ်
+(permission error)။
+
 ## Why
 
 Vercel is lovely until the bill. Docker-based panels want a bigger server and hide your apps inside containers. Self Host Layer does what you'd do by hand (`git pull`, install, build, restart, a web server config, a certificate), done properly:
